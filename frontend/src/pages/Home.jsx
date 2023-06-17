@@ -112,7 +112,7 @@ const Home = () => {
             </div>
           </div>
           <div className="modal-action">
-            <button className="btn">Close</button>
+            <button className="btn">Submit</button>
           </div>
         </form>
       </dialog>
@@ -223,7 +223,7 @@ const Home = () => {
               </div>
               <div className="card w-80 bg-light2 shadow-xl rounded-[34px] ">
                 <div className="card-body">
-                  <h2 className="card-title">Card title!</h2>
+                  <h2 className="card-title">Orders</h2>
                   <p>If a dog chews shoes whose shoes does he choose?</p>
                 </div>
               </div>
