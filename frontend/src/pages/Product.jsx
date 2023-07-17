@@ -1,7 +1,72 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import axios from "axios";
 
 const Product = () => {
+  const [products, setProducts] = useState([]);
+  const [name, setName] = useState("");
+  const [size, setSize] = useState("");
+  const [price, setPrice] = useState("");
+  const [product, setProduct] = useState([]);
+
+  useEffect(() => {
+    getProducts();
+  }, []);
+
+  const getProducts = async () => {
+    const response = await axios.get("http://localhost:5000/product");
+    setProducts(response.data);
+  };
+
+  const getProductById = async (id) => {
+    const response = await axios.get(`http://localhost:5000/product/${id}`);
+    setProduct(response.data);
+    setName(response.data.name);
+    setPrice(response.data.price);
+    setSize(response.data.size);
+  };
+
+  const createProduct = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("http://localhost:5000/product", {
+        name,
+        size,
+        price,
+      });
+      setName("");
+      setSize("");
+      setPrice("");
+      getProducts();
+    } catch (error) {
+      console.info(error.message);
+    }
+  };
+
+  const updateProduct = async (id) => {
+    try {
+      await axios.patch(`http://localhost:5000/product/${id}`, {
+        name,
+        size,
+        price,
+      });
+      setName("");
+      setSize("");
+      setPrice("");
+      getProducts();
+    } catch (error) {
+      console.info(error.message);
+    }
+  };
+
+  const deleteProduct = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/product/${id}`);
+      getProducts();
+    } catch (error) {
+      console.info(error.message);
+    }
+  };
   return (
     <>
       {/* modal box tambah produk start */}
@@ -18,7 +83,9 @@ const Product = () => {
               <input
                 type="text"
                 placeholder="nama produk"
+                value={name}
                 className="input input-bordered w-full"
+                onChange={(e) => setName(e.target.value)}
               />
             </label>
           </div>
@@ -32,7 +99,9 @@ const Product = () => {
               <input
                 type="text"
                 placeholder="ukuran produk"
+                value={size}
                 className="input input-bordered w-full"
+                onChange={(e) => setSize(e.target.value)}
               />
             </label>
           </div>
@@ -46,16 +115,88 @@ const Product = () => {
               <input
                 type="text"
                 placeholder="harga produk"
+                value={price}
                 className="input input-bordered w-full"
+                onChange={(e) => setPrice(e.target.value)}
               />
             </label>
           </div>
           <div className="modal-action">
-            <button className="btn">Submit</button>
+            <button className="btn" type="submit" onClick={createProduct}>
+              Submit
+            </button>
+            <button className="btn">Close</button>
           </div>
         </form>
       </dialog>
       {/* modal box tambah produk end */}
+      {/* modal box Edit produk start */}
+      <dialog id="my_modal_4" className="modal">
+        <form method="dialog" className="modal-box">
+          <h3 className="font-bold text-lg">Edit Produk</h3>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text font-semibold text-sm">
+                Nama Produk
+              </span>
+            </label>
+            <label className="input-group w-full">
+              <input
+                type="text"
+                placeholder="nama produk"
+                value={name}
+                className="input input-bordered w-full"
+                onChange={(e) => setName(e.target.value)}
+              />
+            </label>
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text font-semibold text-sm">
+                Ukuran Produk
+              </span>
+            </label>
+            <label className="input-group w-full">
+              <input
+                type="text"
+                placeholder="ukuran produk"
+                value={size}
+                className="input input-bordered w-full"
+                onChange={(e) => setSize(e.target.value)}
+              />
+            </label>
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text font-semibold text-sm">
+                Harga Produk
+              </span>
+            </label>
+            <label className="input-group w-full">
+              <input
+                type="text"
+                placeholder="harga produk"
+                value={price}
+                className="input input-bordered w-full"
+                onChange={(e) => setPrice(e.target.value)}
+              />
+            </label>
+          </div>
+          <div className="modal-action">
+            <button
+              className="btn"
+              type="submit"
+              onClick={() => {
+                updateProduct(product.id);
+              }}
+            >
+              Save
+            </button>
+            <button className="btn">Close</button>
+          </div>
+        </form>
+      </dialog>
+      {/* modal box Edit produk end */}
       <div className="relative w-screen flex flex-row h-auto bg-light">
         <Navbar />
         <div className="content h-screen w-full flex flex-col box-border">
@@ -71,7 +212,7 @@ const Product = () => {
               />
             </div>
           </div>
-          <div className="content-body w-full">
+          <div className="content-body w-full overflow-auto">
             <div className="card bg-light2 my-5 mx-10 p-10">
               <button
                 className="btn w-fit bg-dark text-light2 rounded-full"
@@ -84,34 +225,39 @@ const Product = () => {
                   {/* head */}
                   <thead>
                     <tr>
-                      <th></th>
+                      <th>No.</th>
                       <th>Nama Produk</th>
                       <th>Ukuran</th>
                       <th>Harga</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {/* row 1 */}
-                    <tr>
-                      <th>1</th>
-                      <td>Cy Ganderton</td>
-                      <td>Quality Control Specialist</td>
-                      <td>Blue</td>
-                    </tr>
-                    {/* row 2 */}
-                    <tr>
-                      <th>2</th>
-                      <td>Hart Hagerty</td>
-                      <td>Desktop Support Technician</td>
-                      <td>Purple</td>
-                    </tr>
-                    {/* row 3 */}
-                    <tr>
-                      <th>3</th>
-                      <td>Brice Swyre</td>
-                      <td>Tax Accountant</td>
-                      <td>Red</td>
-                    </tr>
+                    {products.map((product, index) => (
+                      <tr key={product.id}>
+                        <th> {index + 1} </th>
+                        <td> {product.name} </td>
+                        <td> {product.size} </td>
+                        <td> {product.price} </td>
+                        <td>
+                          <a
+                            className="btn me-3 btn-sm btn-info"
+                            onClick={() => {
+                              window.my_modal_4.showModal();
+                              getProductById(product.id);
+                            }}
+                          >
+                            Edit
+                          </a>
+                          <a
+                            className="btn btn-sm btn-error"
+                            onClick={() => deleteProduct(product.id)}
+                          >
+                            Delete
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>

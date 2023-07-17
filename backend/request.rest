@@ -1,0 +1,60 @@
+### product
+GET http://localhost:5000/product
+
+###
+GET http://localhost:5000/product/26
+
+###
+POST http://localhost:5000/product
+Content-Type: application/json
+
+{
+    "name": "Produk 4",
+    "size": "300ml",
+    "price": "120000",
+    "userId": 1
+}
+
+###
+PATCH http://localhost:5000/product/29
+Content-Type: application/json
+
+{
+    "name": "Produk 4 updated",
+    "size": "280ml",
+    "price": "100000",
+    "userId": 1
+}
+
+###
+DELETE http://localhost:5000/product/27
+
+
+### user
+GET http://localhost:5000/user
+
+###
+GET http://localhost:5000/user/1
+
+###
+POST http://localhost:5000/user
+Content-Type: application/json
+
+{
+    "name": "doe",
+    "password": "amerika",
+    "role": "user"
+}
+
+###
+PATCH http://localhost:5000/user/1
+Content-Type: application/json
+
+{
+    "name": "john doe updated",
+    "password": "amerika latin",
+    "role": "admin"
+}
+
+###
+DELETE http://localhost:5000/user/2

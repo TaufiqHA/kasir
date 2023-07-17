@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
+import User from "./userModel.js";
 
 const { DataTypes } = Sequelize;
 
@@ -15,8 +16,7 @@ const Product = db.define(
   }
 );
 
-export default Product;
+User.hasMany(Product);
+Product.belongsTo(User);
 
-(async () => {
-  await db.sync();
-})();
+export default Product;
